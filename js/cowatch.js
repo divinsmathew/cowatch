@@ -15,10 +15,14 @@ async function onload()
 {
     //states = await buildAllDistrictIdMap()
     states = await buildAllDistrictIdMapLocal()
-    
+
     window.onpopstate = () =>
     {
         window.location.href = window.location.href
+    }
+    window.onbeforeunload = () =>
+    {
+        if (watching) return "Currently watching is in progress. Are you sure, you want to close?"
     }
 
     statesSelect = document.getElementById('states')
@@ -51,7 +55,7 @@ async function onload()
     let qDistrictId = getParameterByName('districtId')
     if (qDistrictId)
     {
-        if(!isNumeric(qDistrictId) || !states.find(s => s.districts.some(d => d.districtId == qDistrictId)))
+        if (!isNumeric(qDistrictId) || !states.find(s => s.districts.some(d => d.districtId == qDistrictId)))
         {
             window.location.replace(relativePath)
             return
