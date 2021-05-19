@@ -340,6 +340,7 @@ ul li label {
     animation: blinker 2s linear infinite;
 }
 .watchingText {
+    margin-bottom: 2px;
     font-weight: bold;
     font-size: 1.3rem;
     color: #ff4d4d;
@@ -400,7 +401,7 @@ ul li label {
 input[type="checkbox"] + label {
     display: block;
     cursor: pointer;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 input[type="checkbox"] {
     display: none;
@@ -415,15 +416,16 @@ input[type="checkbox"] + label:before {
     width: 12px;
     height: 12px;
     margin-right: 8px;
+    margin-top: 11px;
     vertical-align: bottom;
     color: transparent;
     transition: 0.1s;
 }
 input[type="checkbox"] + label:active:before {
-    transform: scale(0);
+    box-shadow: inset 0 0 2.5px #03002c;
 }
 input[type="checkbox"]:checked + label:before {
-    background: url(../assets/img/check.png) -1.5px -1.5px no-repeat;
+    background: url(../assets/img/check.png) -2px -2px no-repeat;
 }
 @keyframes blinker {
     0%,

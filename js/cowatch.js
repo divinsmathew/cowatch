@@ -71,14 +71,7 @@ async function onload()
                     break
 
                 case "denied":
-                    browserNotificationCheckbox.style.display = "none"
-                    let label = document.querySelector("#notificationSettings label")
-                    label.innerHTML = "<b>Please grant the permission manually.</b>"
-                    setTimeout(() =>
-                    {
-                        label.innerHTML = "Receive browser notifications"
-                        browserNotificationCheckbox.style.display = ""
-                    }, 2000)
+                    alert("Please grant the permission manually.")
                     break
 
                 case "granted":
@@ -134,13 +127,14 @@ async function refreshTable(renderFilter)
     let watchDistrictId = districtsSelect.value
     let todayString = getTodayString()
 
-    //let endpoint = "./assets/test.json"
+    //let endpoint = relativePath + "assets/test.json"
     let endpoint = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=" + watchDistrictId + "&date=" + todayString
 
     let response = await fetch(endpoint)
     let responseAsJson = await response.json()
 
     centresData = JSON.parse(JSON.stringify(responseAsJson.centers))
+    document.getElementById('last-refreshed').innerHTML = "Last refreshed: <b>" + getTodayString(true) + "</b>"
 
     main(responseAsJson.centers, renderFilter)
 }
@@ -177,7 +171,6 @@ function main(data, renderFilter)
         {
             document.getElementById('centersNotFound').style.display = "block"
             document.getElementById('filtersHolder').style.display = "none"
-            document.getElementById('last-refreshed').innerHTML = "Last refreshed: <b>" + getTodayString(true) + "</b>"
         }
 
         return
@@ -191,11 +184,7 @@ function main(data, renderFilter)
     document.getElementById('availability').innerHTML = "<span class='nonEmph'>Vaccines available in <span class='emph'>" + availableHospCount + "/" + data.length + "</span> vaccination centres.</span>"
 
     if (renderFilter)
-    {
         renderFiltersInputs(data)
-        document.getElementById('last-refreshed').innerHTML = "Last refreshed: <b>" + getTodayString(true) + "</b>"
-
-    }
 
     let detailsHtml = ''
     for (let i = 0; i < data.length; i++)
@@ -250,7 +239,7 @@ function main(data, renderFilter)
                 newCentres.add(value.name)
         }
 
-        if (newCentres.size > 0) playAlert(Array.from(newCentres))
+        if (newCentres.size > 0 && watching) playAlert(Array.from(newCentres))
     }
 
     buildPreviousSessionCountMap()
@@ -361,7 +350,7 @@ function start()
     document.getElementById('stop-button').removeAttribute("disabled")
     document.getElementById('notificationSettings').style.display = "none"
     
-    document.getElementById('watchHeading').innerHTML = "<div class='watchingText'> <div id='watchingDot'></div>CoWatch is now monitoring CoWin portal every " +
+    document.getElementById('watchHeading').innerHTML = "<div class='watchingText'> <div id='watchingDot'></div>CoWatch is now monitoring Co-WIN portal every " +
         Math.round(refreshInterval / 1000) +
         " seconds.</div> You'll be notified if CoWatch finds new vaccination slots in " +
         "<span class='pop'>" + districtsSelect.options[districtsSelect.selectedIndex].text + "</span>" +
