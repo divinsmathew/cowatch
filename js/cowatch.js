@@ -73,7 +73,7 @@ async function onload()
                 case "denied":
                     browserNotificationCheckbox.style.display = "none"
                     let label = document.querySelector("#notificationSettings label")
-                    label.innerHTML = "<b>Please enable the permission manually.</b>"
+                    label.innerHTML = "<b>Please grand the permission manually.</b>"
                     setTimeout(() =>
                     {
                         label.innerHTML = "Receive browser notifications"
