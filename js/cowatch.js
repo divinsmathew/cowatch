@@ -13,8 +13,9 @@ let refreshInterval = 15000
 
 async function onload()
 {
-    //districtIds = await buildAllDistrictIdMap()
+    //states = await buildAllDistrictIdMap()
     states = await buildAllDistrictIdMapLocal()
+    
     window.onpopstate = () =>
     {
         window.location.href = window.location.href
@@ -334,7 +335,7 @@ function alert(newCentres)
     document.getElementById('foundBanner').style.display = "block"
     document.getElementById('foundBannerBody').innerHTML = "New vaccination slots are now available at " + createSentence(newCentres, false)
 
-    let tone = new Audio('https://drive.google.com/uc?export=download&id=1j24VmUBxuYS7WYWuQ1OzijkfrCMbIWUt')
+    let tone = new Audio(relativePath + 'assets/beep.mp3')
 
     if (alertId === 0) alertId = setInterval(() => tone.play(), 1000)
 }
