@@ -32,7 +32,7 @@ async function onload()
         resetFilter()
         fillDistricts()
 
-        window.history.pushState('', '', "/index.html?districtId=" + districtsSelect.value)
+        window.history.pushState('', '', relativePath + "?districtId=" + districtsSelect.value)
         previousDetailsHtml = ''
         previousSessionCountMap.clear()
         refreshTable(true)
@@ -41,7 +41,7 @@ async function onload()
     districtsSelect.addEventListener('change', () =>
     {
         resetFilter()
-        window.history.pushState('', '', "/index.html?districtId=" + districtsSelect.value)
+        window.history.pushState('', '', relativePath + "?districtId=" + districtsSelect.value)
         previousDetailsHtml = ''
         previousSessionCountMap.clear()
         refreshTable(true)
@@ -52,7 +52,7 @@ async function onload()
     {
         if(!isNumeric(qDistrictId) || !states.find(s => s.districts.some(d => d.districtId == qDistrictId)))
         {
-            window.location.replace('/index.html')
+            window.location.replace(relativePath)
             return
         }
 

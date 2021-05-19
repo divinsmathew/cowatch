@@ -9,6 +9,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="./css/styles.css">
   <title>CoWatch</title>
+
+  <script src="./js/cowatch.js" defer></script>
+  <script src="./js/districts.js" defer></script>
+  <script src="./js/utils.js"></script>
+  <script>let relativePath = getUrlParts(window.location.href).pathname.replace('index.html', '')</script>
 </head>
 
 <body onload="onload()">
@@ -138,9 +143,6 @@
       </table>
     </div>
   </div>
-  <script src="./js/cowatch.js"></script>
-  <script src="./js/districts.js"></script>
-  <script src="./js/utils.js"></script>
 </body>
 
 </html>
