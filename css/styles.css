@@ -391,11 +391,39 @@ ul li label {
     align-items: center;
     justify-content: center;
 }
-#notificationSettings input{
+#notificationSettings input {
     margin-right: 10px;
 }
-#notificationSettings label{
+#notificationSettings label {
     cursor: pointer;
+}
+input[type="checkbox"] + label {
+    display: block;
+    cursor: pointer;
+    margin-bottom: 8px;
+}
+input[type="checkbox"] {
+    display: none;
+}
+input[type="checkbox"] + label:before {
+    content: "";
+    border: 0.1em solid #000;
+    border-radius: 0.2em;
+    display: inline-block;
+    position: relative;
+    top: -3px;
+    width: 12px;
+    height: 12px;
+    margin-right: 8px;
+    vertical-align: bottom;
+    color: transparent;
+    transition: 0.1s;
+}
+input[type="checkbox"] + label:active:before {
+    transform: scale(0);
+}
+input[type="checkbox"]:checked + label:before {
+    background: url(../assets/img/check.png) -1.5px -1.5px no-repeat;
 }
 @keyframes blinker {
     0%,
