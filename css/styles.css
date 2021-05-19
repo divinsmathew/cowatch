@@ -384,6 +384,19 @@ ul li label {
     position: relative;
     top: -2px;
 }
+#notificationSettings {
+    font-size: 0.95rem;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#notificationSettings input{
+    margin-right: 10px;
+}
+#notificationSettings label{
+    cursor: pointer;
+}
 @keyframes blinker {
     0%,
     100% {

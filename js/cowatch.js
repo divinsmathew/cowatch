@@ -7,6 +7,7 @@ let statesSelect = {}
 let districtsSelect = {}
 let filterExcemptions = {}
 let previousDetailsHtml = ''
+let browserNotificationCheckbox = {}
 let previousSessionCountMap = new Map()
 
 let refreshInterval = 15000
@@ -50,6 +51,43 @@ async function onload()
         previousDetailsHtml = ''
         previousSessionCountMap.clear()
         refreshTable(true)
+    })
+
+    browserNotificationCheckbox = document.getElementById('browserNotificationCheckbox')
+    browserNotificationCheckbox.addEventListener('click', e =>
+    {
+        e.preventDefault()
+
+        if (browserNotificationCheckbox.checked)
+        {
+            switch (Notification.permission)
+            {
+                case "default":
+                    Notification.requestPermission().then(result =>
+                    {
+                        setTimeout(() => browserNotificationCheckbox.checked = result === "granted")
+                        return true
+                    })
+                    break
+
+                case "denied":
+                    browserNotificationCheckbox.style.display = "none"
+                    let label = document.querySelector(".notificationSettings label")
+                    label.innerHTML = "<b>Please enable the permission manually.</b>"
+                    setTimeout(() =>
+                    {
+                        label.innerHTML = "Receive browser notifications"
+                        browserNotificationCheckbox.style.display = ""
+                    }, 2000)
+                    break
+
+                case "granted":
+                    setTimeout(() => browserNotificationCheckbox.checked = true)
+                    break
+            }
+        }
+        else
+            setTimeout(() => browserNotificationCheckbox.checked = false)
     })
 
     let qDistrictId = getParameterByName('districtId')
@@ -304,6 +342,7 @@ function stop()
     clearInterval(timerId)
     document.getElementById('start-button').removeAttribute("disabled")
     document.getElementById('stop-button').setAttribute("disabled", "true")
+    document.getElementById('notificationSettings').style.display = "flex"
     let filterControls = document.getElementById('filterControls')
     filterControls.classList.remove("heightCollapse")
     filterControls.classList.add("heightExpand")
@@ -320,7 +359,8 @@ function start()
     previousSessionCountMap.clear()
     document.getElementById('start-button').setAttribute("disabled", "true")
     document.getElementById('stop-button').removeAttribute("disabled")
-
+    document.getElementById('notificationSettings').style.display = "none"
+    
     document.getElementById('watchHeading').innerHTML = "<div class='watchingText'> <div id='watchingDot'></div>CoWatch is now monitoring CoWin portal every " +
         Math.round(refreshInterval / 1000) +
         " seconds.</div> You'll be notified if CoWatch finds new vaccination slots in " +
@@ -342,6 +382,9 @@ function playAlert(newCentres)
     let tone = new Audio(relativePath + 'assets/beep.mp3')
 
     if (alertId === 0) alertId = setInterval(() => tone.play(), 1000)
+
+    if(browserNotificationCheckbox.checked)
+        new Notification('CoWatch Alert', { body: createSentence(newCentres, true), icon: relativePath + "./assets/img/icon.pnge"})
 }
 
 function dismiss()
