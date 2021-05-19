@@ -212,7 +212,7 @@ function main(data, renderFilter)
                 newCentres.add(value.name)
         }
 
-        if (newCentres.size > 0) alert(Array.from(newCentres))
+        if (newCentres.size > 0) playAlert(Array.from(newCentres))
     }
 
     buildPreviousSessionCountMap()
@@ -334,7 +334,7 @@ function start()
     watching = true
 }
 
-function alert(newCentres)
+function playAlert(newCentres)
 {
     document.getElementById('foundBanner').style.display = "block"
     document.getElementById('foundBannerBody').innerHTML = "New vaccination slots are now available at " + createSentence(newCentres, false)
