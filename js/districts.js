@@ -50,7 +50,8 @@ function cleanName(name)
 
 async function buildAllDistrictIdMapLocal()
 {
-    let endpoint = "./assets/districts.json"
+    let path = getUrlParts(window.location.href).pathname.replace('index.html','');
+    let endpoint = path + 'assets/districts.json'
 
     let response = await fetch(endpoint)
     let responseAsJson = await response.json()

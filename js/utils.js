@@ -42,3 +42,19 @@ function isNumeric(str)
     if (typeof str != "string") return false
     return !isNaN(str) && !isNaN(parseFloat(str))
 }
+
+function getUrlParts(url) {
+    var a = document.createElement('a');
+    a.href = url;
+
+    return {
+        href: a.href,
+        host: a.host,
+        hostname: a.hostname,
+        port: a.port,
+        pathname: a.pathname,
+        protocol: a.protocol,
+        hash: a.hash,
+        search: a.search
+    };
+}
