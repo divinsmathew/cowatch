@@ -50,7 +50,7 @@ function cleanName(name)
 
 async function buildAllDistrictIdMapLocal()
 {
-    let endpoint = "../assets/districts.json"
+    let endpoint = "./assets/districts.json"
 
     let response = await fetch(endpoint)
     let responseAsJson = await response.json()
