@@ -384,7 +384,7 @@ function playAlert(newCentres)
     if (alertId === 0) alertId = setInterval(() => tone.play(), 1000)
 
     if(browserNotificationCheckbox.checked)
-        new Notification('CoWatch Alert', { body: createSentence(newCentres, true), icon: relativePath + "./assets/img/icon.pnge"})
+        new Notification('CoWatch Alert', { body: createSentence(newCentres, true), icon: relativePath + "./assets/img/icon.png"})
 }
 
 function dismiss()
