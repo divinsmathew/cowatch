@@ -6,7 +6,9 @@ This program **cannot not book** a vaccination slot for you, instead it uses the
 
 # :rocket: Demo
 
-Checkout a live version CoWatch [here](https://diozz.github.io/cowatch).
+Checkout a live version of CoWatch [here](https://diozz.github.io/cowatch).
+
+![](https://i.imgur.com/IXJAiY0.gif)
 
 # The Co-WIN API 
 
