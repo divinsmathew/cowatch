@@ -317,7 +317,7 @@ ul li label {
 .bannerText {
     color: #000;
     border-radius: 5px;
-    font-size: 1.1em;
+    font-size: 1.05em;
 }
 .bannerText .pop {
     color: #000;
@@ -345,8 +345,8 @@ ul li label {
     display: inline-block;
     margin-right: 8px;
     background-color: red;
-    width: 15px;
-    height: 15px;
+    width: 0.75em;
+    height: 0.75em;
     border-radius: 50%;
     animation: blinker 2s linear infinite;
 }
