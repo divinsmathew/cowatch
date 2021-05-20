@@ -6,7 +6,7 @@ let centresData = {}
 let statesSelect = {}
 let filtersSideNav = {}
 let districtsSelect = {}
-let filterExcemptions = {}
+let filterInclusions = {}
 let previousDetailsHtml = ''
 let browserNotificationCheckbox = {}
 let previousSessionCountMap = new Map()
@@ -15,6 +15,8 @@ let refreshInterval = 15000
 
 async function onload()
 {
+    document.getElementById('diozz').setAttribute('href', relativePath)
+
     //states = await buildAllDistrictIdMap()
     states = await buildAllDistrictIdMapLocal()
 
@@ -113,7 +115,7 @@ async function onload()
 
 function resetFilter()
 {
-    filterExcemptions = { fee: [], dates: [], vaccines: [], ageGroups: [], slots: ["dose1", "dose2"] }
+    filterInclusions = { fee: [], dates: [], vaccines: [], ageGroups: [], slots: ["dose1", "dose2"] }
 }
 
 function fillDistricts()
@@ -181,8 +183,7 @@ function main(data, renderFilter)
     let availableHospCount = data.filter(x => x.sessions && x.sessions.some(y => y.available_capacity > 0)).length
     document.getElementById('availability').innerHTML = "<span class='nonEmph'>Vaccines available in <span class='emph'>" + availableHospCount + "/" + data.length + "</span> vaccination centres.</span>"
 
-    if (renderFilter)
-        renderFiltersInputs(data)
+    if (renderFilter) renderFiltersInputs(data)
 
     let detailsHtml = ''
     for (let i = 0; i < data.length; i++)
@@ -291,40 +292,33 @@ function renderFiltersInputs(data)
         let target = e.target
 
         if (target.id.startsWith('feeFilter'))
-            target.checked ? filterExcemptions.fee.push(target.value) : filterExcemptions.fee = filterExcemptions.fee.filter(x => x !== target.value)
+            target.checked ? filterInclusions.fee.push(target.value) : filterInclusions.fee = filterInclusions.fee.filter(x => x !== target.value)
         else if (target.id.startsWith('dateFilter'))
-            target.checked ? filterExcemptions.dates.push(target.value) : filterExcemptions.dates = filterExcemptions.dates.filter(x => x !== target.value)
+            target.checked ? filterInclusions.dates.push(target.value) : filterInclusions.dates = filterInclusions.dates.filter(x => x !== target.value)
         else if (target.id.startsWith('vaccineFilter'))
-            target.checked ? filterExcemptions.vaccines.push(target.value) : filterExcemptions.vaccines = filterExcemptions.vaccines.filter(x => x !== target.value)
+            target.checked ? filterInclusions.vaccines.push(target.value) : filterInclusions.vaccines = filterInclusions.vaccines.filter(x => x !== target.value)
         else if (target.id.startsWith('ageGroupFilter'))
-            target.checked ? filterExcemptions.ageGroups.push(target.value) : filterExcemptions.ageGroups = filterExcemptions.ageGroups.filter(x => x !== target.value)
+            target.checked ? filterInclusions.ageGroups.push(target.value) : filterInclusions.ageGroups = filterInclusions.ageGroups.filter(x => x !== target.value)
         else if (target.id.startsWith('slotsFilter'))
-            target.checked ? filterExcemptions.slots = filterExcemptions.slots.filter(x => x !== target.value) : filterExcemptions.slots.push(target.value)
+            target.checked ? filterInclusions.slots = filterInclusions.slots.filter(x => x !== target.value) : filterInclusions.slots.push(target.value)
 
         previousDetailsHtml = ''
         previousSessionCountMap.clear()
         main(JSON.parse(JSON.stringify(centresData)), false)
-
-        console.log(filterExcemptions.dates)
     }
 }
 
 function applyExcemptionFilters(data)
 {
-    let feeFiltersCount = document.querySelectorAll('*[id^="feeFilter-"]').length
-    let dateFiltersCount = document.querySelectorAll('*[id^="dateFilter-"]').length
-    let vaccineFiltersCount = document.querySelectorAll('*[id^="vaccineFilter-"]').length
-    let ageGroupFiltersCount = document.querySelectorAll('*[id^="ageGroupFilter-"]').length
-
-    return data.filter(item => (filterExcemptions.fee.length === 0 || filterExcemptions.fee.includes(item.fee_type)))
+    return data.filter(item => (filterInclusions.fee.length === 0 || filterInclusions.fee.includes(item.fee_type)))
         .map(item =>
         {
             item.sessions = item.sessions.filter(s =>
-                (filterExcemptions.dates.length === 0 || filterExcemptions.dates.includes(s.date)) &&
-                (filterExcemptions.vaccines.length === 0 || filterExcemptions.vaccines.includes(s.vaccine)) &&
-                (filterExcemptions.ageGroups.length === 0 || filterExcemptions.ageGroups.includes(s.min_age_limit.toString())) &&
-                (filterExcemptions.slots.includes("dose1") ? true : s.available_capacity_dose1 > 0) &&
-                (filterExcemptions.slots.includes("dose2") ? true : s.available_capacity_dose2 > 0)
+                (filterInclusions.dates.length === 0 || filterInclusions.dates.includes(s.date)) &&
+                (filterInclusions.vaccines.length === 0 || filterInclusions.vaccines.includes(s.vaccine)) &&
+                (filterInclusions.ageGroups.length === 0 || filterInclusions.ageGroups.includes(s.min_age_limit.toString())) &&
+                (filterInclusions.slots.includes("dose1") ? true : s.available_capacity_dose1 > 0) &&
+                (filterInclusions.slots.includes("dose2") ? true : s.available_capacity_dose2 > 0)
             )
             return item
         })
