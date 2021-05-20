@@ -46,8 +46,15 @@ button[disabled],
 button[disabled] {
     cursor: not-allowed;
 }
+.heading:hover {
+    background-color: #ececec;
+    cursor: pointer;
+}
 .heading {
-    color: #02203c;
+    text-decoration: none;
+    border-radius: 8px;
+    padding: 0px 10px;
+    color: #00162b;
     font-size: 2rem;
     font-weight: bold;
     margin-right: 20px;
@@ -195,7 +202,7 @@ select:focus {
     justify-content: center;
 }
 .heightExpand {
-    transition:  max-height 0.3s ease-in;
+    transition: max-height 0.3s ease-in;
     margin-bottom: 10px;
     max-height: 1000px;
 }
