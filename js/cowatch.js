@@ -4,6 +4,7 @@ let alertId = 0
 let watching = false
 let centresData = {}
 let statesSelect = {}
+let filtersSideNav = {}
 let districtsSelect = {}
 let filterExcemptions = {}
 let previousDetailsHtml = ''
@@ -28,6 +29,7 @@ async function onload()
 
     statesSelect = document.getElementById('states')
     districtsSelect = document.getElementById('districts')
+    filtersSideNav = document.getElementById('filtersSideNav')
 
     statesSelect.innerHTML = ''
     for (let i = 0; i < states.length; i++)
@@ -168,16 +170,12 @@ function main(data, renderFilter)
         document.title = "CoWatch | " + currentDistrict
 
         if (renderFilter)
-        {
-            document.getElementById('centersNotFound').style.display = "block"
             document.getElementById('filtersHolder').style.display = "none"
-        }
 
         return
     }
     document.getElementById('notFoundImgContainer').style.display = "none"
-    document.getElementById('centersNotFound').style.display = "none"
-    if (!watching) document.getElementById('filtersHolder').style.display = "flex"
+    if (!watching && centresData.length != 0) document.getElementById('filtersHolder').style.display = "flex"
     document.getElementById('table').style.display = "block"
 
     let availableHospCount = data.filter(x => x.sessions && x.sessions.some(y => y.available_capacity > 0)).length
@@ -268,10 +266,10 @@ function renderFiltersInputs(data)
     ageGroupFilterList.innerHTML = ''
     slotsFilterList.innerHTML = ''
 
-    uniqueFees.map((x, i) => feeFilterList.innerHTML += '<li><input value="' + x + '" checked type="checkbox" class="filterCheckbox" id="feeFilter-' + i + '"><label for="feeFilter-' + i + '">' + x + '</label></li>')
-    uniqueDates.map((x, i) => dateFilterList.innerHTML += '<li><input value="' + x + '" checked type="checkbox" class="filterCheckbox" id="dateFilter-' + i + '"><label for="dateFilter-' + i + '">' + x + '</label></li>')
-    uniqueVaccines.map((x, i) => vaccineFilterList.innerHTML += '<li><input value="' + x + '" checked type="checkbox" class="filterCheckbox" id="vaccineFilter-' + i + '"><label for="vaccineFilter-' + i + '">' + x + '</label></li>')
-    uniqueAgeGroups.map((x, i) => ageGroupFilterList.innerHTML += '<li><input value="' + x + '" checked type="checkbox" class="filterCheckbox" id="ageGroupFilter-' + i + '"><label for="ageGroupFilter-' + i + '">' + x + '+</label></li>')
+    uniqueFees.map((x, i) => feeFilterList.innerHTML += '<li><input value="' + x + '" type="checkbox" class="filterCheckbox" id="feeFilter-' + i + '"><label for="feeFilter-' + i + '">' + x + '</label></li>')
+    uniqueDates.map((x, i) => dateFilterList.innerHTML += '<li><input value="' + x + '" type="checkbox" class="filterCheckbox" id="dateFilter-' + i + '"><label for="dateFilter-' + i + '">' + x + '</label></li>')
+    uniqueVaccines.map((x, i) => vaccineFilterList.innerHTML += '<li><input value="' + x + '" type="checkbox" class="filterCheckbox" id="vaccineFilter-' + i + '"><label for="vaccineFilter-' + i + '">' + x + '</label></li>')
+    uniqueAgeGroups.map((x, i) => ageGroupFilterList.innerHTML += '<li><input value="' + x + '" type="checkbox" class="filterCheckbox" id="ageGroupFilter-' + i + '"><label for="ageGroupFilter-' + i + '">' + x + '+</label></li>')
     if (data && data.length > 0)
     {
         slotsFilterList.innerHTML += '<li><input value="dose1" type="checkbox" class="filterCheckbox" id="slotsFilter0"><label for="slotsFilter0">Dose I</label></li>'
@@ -293,30 +291,38 @@ function renderFiltersInputs(data)
         let target = e.target
 
         if (target.id.startsWith('feeFilter'))
-            target.checked ? filterExcemptions.fee = filterExcemptions.fee.filter(x => x !== target.value) : filterExcemptions.fee.push(target.value)
+            target.checked ? filterExcemptions.fee.push(target.value) : filterExcemptions.fee = filterExcemptions.fee.filter(x => x !== target.value)
         else if (target.id.startsWith('dateFilter'))
-            target.checked ? filterExcemptions.dates = filterExcemptions.dates.filter(x => x !== target.value) : filterExcemptions.dates.push(target.value)
+            target.checked ? filterExcemptions.dates.push(target.value) : filterExcemptions.dates = filterExcemptions.dates.filter(x => x !== target.value)
         else if (target.id.startsWith('vaccineFilter'))
-            target.checked ? filterExcemptions.vaccines = filterExcemptions.vaccines.filter(x => x !== target.value) : filterExcemptions.vaccines.push(target.value)
+            target.checked ? filterExcemptions.vaccines.push(target.value) : filterExcemptions.vaccines = filterExcemptions.vaccines.filter(x => x !== target.value)
         else if (target.id.startsWith('ageGroupFilter'))
-            target.checked ? filterExcemptions.ageGroups = filterExcemptions.ageGroups.filter(x => x !== target.value) : filterExcemptions.ageGroups.push(target.value)
+            target.checked ? filterExcemptions.ageGroups.push(target.value) : filterExcemptions.ageGroups = filterExcemptions.ageGroups.filter(x => x !== target.value)
         else if (target.id.startsWith('slotsFilter'))
             target.checked ? filterExcemptions.slots = filterExcemptions.slots.filter(x => x !== target.value) : filterExcemptions.slots.push(target.value)
 
         previousDetailsHtml = ''
         previousSessionCountMap.clear()
         main(JSON.parse(JSON.stringify(centresData)), false)
+
+        console.log(filterExcemptions.dates)
     }
 }
 
 function applyExcemptionFilters(data)
 {
-    return data.filter(item => !filterExcemptions.fee.includes(item.fee_type))
+    let feeFiltersCount = document.querySelectorAll('*[id^="feeFilter-"]').length
+    let dateFiltersCount = document.querySelectorAll('*[id^="dateFilter-"]').length
+    let vaccineFiltersCount = document.querySelectorAll('*[id^="vaccineFilter-"]').length
+    let ageGroupFiltersCount = document.querySelectorAll('*[id^="ageGroupFilter-"]').length
+
+    return data.filter(item => (filterExcemptions.fee.length === 0 || filterExcemptions.fee.includes(item.fee_type)))
         .map(item =>
         {
-            item.sessions = item.sessions.filter(s => !filterExcemptions.dates.includes(s.date) &&
-                !filterExcemptions.vaccines.includes(s.vaccine) &&
-                !filterExcemptions.ageGroups.includes(s.min_age_limit.toString()) &&
+            item.sessions = item.sessions.filter(s =>
+                (filterExcemptions.dates.length === 0 || filterExcemptions.dates.includes(s.date)) &&
+                (filterExcemptions.vaccines.length === 0 || filterExcemptions.vaccines.includes(s.vaccine)) &&
+                (filterExcemptions.ageGroups.length === 0 || filterExcemptions.ageGroups.includes(s.min_age_limit.toString())) &&
                 (filterExcemptions.slots.includes("dose1") ? true : s.available_capacity_dose1 > 0) &&
                 (filterExcemptions.slots.includes("dose2") ? true : s.available_capacity_dose2 > 0)
             )
@@ -332,9 +338,13 @@ function stop()
     document.getElementById('start-button').removeAttribute("disabled")
     document.getElementById('stop-button').setAttribute("disabled", "true")
     document.getElementById('notificationSettings').style.display = "flex"
+    if (centresData.length !== 0)
+        setTimeout(() => { document.getElementById('filtersHolder').style.display = "flex" }, 500)
     let filterControls = document.getElementById('filterControls')
     filterControls.classList.remove("heightCollapse")
     filterControls.classList.add("heightExpand")
+    filtersSideNav.classList.remove("widthCollapse")
+    filtersSideNav.classList.add("widthExpand")
 
     document.getElementById('watchHeading').innerHTML = "Get pinged when a new vaccination slot becomes available. Press Start Watching to start monitoring <span class='pop'>" + districtsSelect.options[districtsSelect.selectedIndex].text + "</span> district."
 }
@@ -344,12 +354,15 @@ function start()
     let filterControls = document.getElementById('filterControls')
     filterControls.classList.add("heightCollapse")
     filterControls.classList.remove("heightExpand")
+    filtersSideNav.classList.add("widthCollapse")
+    filtersSideNav.classList.remove("widthExpand")
     previousDetailsHtml = ''
     previousSessionCountMap.clear()
     document.getElementById('start-button').setAttribute("disabled", "true")
     document.getElementById('stop-button').removeAttribute("disabled")
     document.getElementById('notificationSettings').style.display = "none"
-    
+    document.getElementById('filtersHolder').style.display = "none"
+
     document.getElementById('watchHeading').innerHTML = "<div class='watchingText'> <div id='watchingDot'></div>CoWatch is now monitoring Co-WIN portal every " +
         Math.round(refreshInterval / 1000) +
         " seconds.</div> You'll be notified if CoWatch finds new vaccination slots in " +
@@ -372,8 +385,8 @@ function playAlert(newCentres)
 
     if (alertId === 0) alertId = setInterval(() => tone.play(), 1000)
 
-    if(browserNotificationCheckbox.checked)
-        new Notification('CoWatch Alert', { body: createSentence(newCentres, true), icon: relativePath + "./assets/img/icon.png"})
+    if (browserNotificationCheckbox.checked)
+        new Notification('CoWatch Alert', { body: createSentence(newCentres, true), icon: relativePath + "./assets/img/icon.png" })
 }
 
 function dismiss()
@@ -382,4 +395,13 @@ function dismiss()
     alertId = 0
 
     document.getElementById('foundBanner').style.display = "none"
+    document.getElementById('muteAlertButton').style.display = "block"
+}
+
+function mute()
+{
+    clearInterval(alertId)
+    alertId = 0
+
+    document.getElementById('muteAlertButton').style.display = "none"
 }

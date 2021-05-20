@@ -26,129 +26,138 @@
       <span>Fork on GitHub</span>
     </button>
   </nav>
-  <div class="main">
-    <div id="watchControls" class="card right">
-      <div class="headBack">Watch.</div>
-      <div class="limitStatWidth">
-        <div id="watchHeading" class="bannerText">
-        </div>
-        <div id="notificationSettings">
-          <div class="checkboxHolder">
+  <nav id="watchControls" class="right">
+    <div class="limitStatWidth">
+      <div id="watchHeading" class="bannerText">
+      </div>
+      <div id="notificationSettings">
+        <div class="checkboxHolder">
           <input type="checkbox" id="browserNotificationCheckbox">
           <label for="browserNotificationCheckbox">Receive browser notifications</label>
         </div>
+      </div>
+      <div id="foundBanner">
+        <div id="foundBannerHead">New Vaccination Slot Available!</div>
+        <div id="foundBannerBody"></div>
+        <div id="foundBannerButtons">
+          <button id="muteAlertButton" onclick="mute();">
+            <img src="./assets/img/mute.png" alt="Mute">
+            <span>Mute</span>
+          </button>
+          <button id="dismissAlertButton" onclick="dismiss();">
+            <img src="./assets/img/close.png" alt="Dismiss">
+            <span>Dismiss</span>
+          </button>
+          <button onclick="mute(); window.open('https://selfregistration.cowin.gov.in/', '_blank').focus();">
+            <img src="./assets/img/link.png" alt="Open Link">
+            <span>CoWin</span>
+          </button>
         </div>
-        <div id="foundBanner">
-          <div id="foundBannerHead">New Vaccination Slot Available!</div>
-          <div id="foundBannerBody"></div>
-          <div id="foundBannerButtons">
-            <button id="dismissAlertButton" onclick="dismiss();">
-              <img src="./assets/img/mute.png" alt="Start Watching">
-              <span>Dismiss</span>
-            </button>
-            <button onclick="dismiss(); window.open('https://selfregistration.cowin.gov.in/', '_blank').focus();">
-              <img src="./assets/img/link.png" alt="Start Watching">
-              <span>CoWin</span>
-            </button>
+      </div>
+    </div>
+    <div class="watchButtonHolder">
+      <button id="start-button" onclick="start();">
+        <img src="./assets/img/play-button.png" alt="Start Watching">
+        <span>Start Watching</span>
+      </button>
+      <button id="stop-button" disabled onclick="stop();">
+        <img src="./assets/img/stop.png" alt="Stop Watching">
+        <span>Stop Watching</span>
+      </button>
+    </div>
+  </nav>
+  <div class="root">
+    <div class="content">
+      <div id="filtersSideNav" class="side card widthExpand">
+        <div class="headBack">Filter.</div>
+        <div id="filtersHolder">
+          <div class="filterGroup">
+            <span class="filterGroupHead">Fee</span>
+            <ul class="filterList" id="feeFilterList">
+          </div>
+          <div class="filterGroup">
+            <span class="filterGroupHead">Dates</span>
+            <ul class="filterList" id="dateFilterList">
+            </ul>
+          </div>
+          <div class="filterGroup">
+            <span class="filterGroupHead">Vaccines</span>
+            <ul class="filterList" id="vaccineFilterList">
+            </ul>
+          </div>
+          <div class="filterGroup">
+            <span class="filterGroupHead">Age Groups</span>
+            <ul class="filterList" id="ageGroupFilterList">
+            </ul>
+          </div>
+          <div class="filterGroup">
+            <span class="filterGroupHead">Slots</span>
+            <ul class="filterList" id="slotsFilterList">
+            </ul>
           </div>
         </div>
       </div>
-      <div class="watchButtonHolder">
-        <button id="start-button" onclick="start();">
-          <img src="./assets/img/play-button.png" alt="Start Watching">
-          <span>Start Watching</span>
-        </button>
-        <button id="stop-button" disabled onclick="stop();">
-          <img src="./assets/img/stop.png" alt="Stop Watching">
-          <span>Stop Watching</span>
-        </button>
-      </div>
-    </div>
-    <div id="filterControls" class="card heightExpand">
-      <div class="headBack">Filter.</div>
-      <div class="locationFilter">
-        <div class="group">
-          <div class="groupHead">State</div>
-          <select id="states"></select>
+      <div class="main">
+        <div id="filterControls" class="card heightExpand">
+          <div class="headBack">Locate.</div>
+          <div class="locationFilter">
+            <div class="group">
+              <div class="groupHead">State</div>
+              <select id="states"></select>
+            </div>
+            <div class="group">
+              <div class="groupHead">District</div>
+              <select id="districts"></select>
+            </div>
+          </div>
         </div>
-        <div class="group">
-          <div class="groupHead">District</div>
-          <select id="districts"></select>
-        </div>
-      </div>
-      <span id="centersNotFound" class='notFound hidden'>No Vaccination Centres Found</span>
-      <div id="filtersHolder">
-        <div class="filterGroup">
-          <span class="filterGroupHead">Fee</span>
-          <ul class="filterList" id="feeFilterList">
-        </div>
-        <div class="filterGroup">
-          <span class="filterGroupHead">Dates</span>
-          <ul class="filterList" id="dateFilterList">
-          </ul>
-        </div>
-        <div class="filterGroup">
-          <span class="filterGroupHead">Vaccines</span>
-          <ul class="filterList" id="vaccineFilterList">
-          </ul>
-        </div>
-        <div class="filterGroup">
-          <span class="filterGroupHead">Age Groups</span>
-          <ul class="filterList" id="ageGroupFilterList">
-          </ul>
-        </div>
-        <div class="filterGroup">
-          <span class="filterGroupHead">Slots</span>
-          <ul class="filterList" id="slotsFilterList">
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div id="tableContainer">
-      <div id="tableInfo">
-        <div>
-          <div id="availability"></div>
-          <div id="last-refreshed"></div>
-        </div>
-        <div class="flex">
-          <button id="refresh-button" onclick="refreshTable(false);">
-            <img src="./assets/img/reload.png" alt="Reload">
-            <span>Refresh</span>
-          </button>
-          <button onclick="window.open('https://selfregistration.cowin.gov.in/', '_blank').focus();">
-            <span>Register @CoWin</span>
-          </button>
+        <div id="tableContainer">
+          <div id="tableInfo">
+            <div>
+              <div id="availability"></div>
+              <div id="last-refreshed"></div>
+            </div>
+            <div class="flex">
+              <button id="refresh-button" onclick="refreshTable(false);">
+                <img src="./assets/img/reload.png" alt="Reload">
+                <span>Refresh</span>
+              </button>
+              <button onclick="window.open('https://selfregistration.cowin.gov.in/', '_blank').focus();">
+                <span>Register @CoWin</span>
+              </button>
+            </div>
+          </div>
+          <div id="notFoundImgContainer" class="hidden">
+            <img src="./assets/img/sad.png" alt="No centers found">
+          </div>
+          <table id="table" class="highlight striped">
+            <thead>
+              <tr class="subHeaderRow1">
+                <th>#</th>
+                <th class="nameWidthLimit">Hospital</th>
+                <th>Fee</th>
+                <th>Date</th>
+                <th>Vaccine</th>
+                <th>Age Group</th>
+                <th colspan="3" style="text-align: center; width: auto;">Remaining Slots</th>
+              </tr>
+              <tr class="subHeaderRow2">
+                <td></td>
+                <td class="nameWidtdLimit"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Dose 1</td>
+                <td>Dose 2</td>
+                <td>Total</td>
+              </tr>
+            </thead>
+            <tbody id="hospitals">
+            </tbody>
+          </table>
         </div>
       </div>
-      <div id="notFoundImgContainer" class="hidden">
-        <img src="./assets/img/sad.png" alt="No centers found">
-      </div>
-      <table id="table" class="highlight striped">
-        <thead>
-          <tr class="subHeaderRow1">
-            <th>#</th>
-            <th class="nameWidthLimit">Hospital</th>
-            <th>Fee</th>
-            <th>Date</th>
-            <th>Vaccine</th>
-            <th>Age Group</th>
-            <th colspan="3" style="text-align: center; width: auto;">Remaining Slots</th>
-          </tr>
-          <tr class="subHeaderRow2">
-            <td></td>
-            <td class="nameWidtdLimit"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>Dose 1</td>
-            <td>Dose 2</td>
-            <td>Total</td>
-          </tr>
-        </thead>
-        <tbody id="hospitals">
-        </tbody>
-      </table>
     </div>
   </div>
 </body>
