@@ -48,6 +48,8 @@ async function onload()
     loadingIndicator = document.getElementById('loadingIndicator')
     notFoundImgContainer = document.getElementById('notFoundImgContainer')
 
+    setLoading(true)
+
     statesSelect.innerHTML = ''
     for (let i = 0; i < states.length; i++)
         statesSelect.innerHTML += '<option class="option" value="' + states[i].stateId + '">' + states[i].stateName + '</option>'
