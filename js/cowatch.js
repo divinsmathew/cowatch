@@ -192,15 +192,15 @@ function main(data, renderFilter)
 
         detailsHtml += "<tr>"
         detailsHtml += "<td rowspan='" + currentHospital.sessions.length + "'>" + (i + 1) + ".</td>"
-        detailsHtml += "<td class='nameWidthLimit' rowspan='" + currentHospital.sessions.length + "'><b>" + currentHospital.name + "</b>, " + currentHospital.block_name + "<br><span class='address'>" + currentHospital.address + ", " + currentHospital.pincode + "</span>" + "</td>"
+        detailsHtml += "<td class='nameWidthLimit' rowspan='" + currentHospital.sessions.length + "'><b>" + currentHospital.name + "</b>, " + (currentHospital.block_name.toLowerCase() === "not applicable" ? "" : currentHospital.block_name) + "<br><span class='address'>" + currentHospital.address + ", " + currentHospital.pincode + "</span>" + "</td>"
         detailsHtml += "<td rowspan='" + currentHospital.sessions.length + "'>" + currentHospital.fee_type + "</td>"
 
         for (let j = 0; j < currentHospital.sessions.length; j++)
         {
             if (j > 0) detailsHtml += "<tr>"
             let currentSession = currentHospital.sessions[j]
-            detailsHtml += "<td>" + currentSession.date + "</td>"
-            detailsHtml += "<td>" + currentSession.vaccine + "</td>"
+            detailsHtml += "<td class='cellMinWidth'>" + currentSession.date + "</td>"
+            detailsHtml += "<td class='cellMinWidth'>" + currentSession.vaccine + "</td>"
             detailsHtml += "<td>" + currentSession.min_age_limit + "+</td>"
             detailsHtml += "<td style='background-color: #" + (currentSession.available_capacity_dose1 > 0 ? "bfedaf" : "ffc2c2") + ";'>" + currentSession.available_capacity_dose1 + "</td>"
             detailsHtml += "<td style='background-color: #" + (currentSession.available_capacity_dose2 > 0 ? "bfedaf" : "ffc2c2") + ";'>" + currentSession.available_capacity_dose2 + "</td>"

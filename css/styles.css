@@ -67,6 +67,9 @@ table {
     border-collapse: collapse;
     align-self: center;
 }
+.cellMinWidth{
+    min-width: 85px;
+}
 thead,
 tbody {
     min-width: 100%;
