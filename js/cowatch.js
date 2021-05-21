@@ -1,22 +1,30 @@
-let states = []
+let watching = false
+let makeVisibles = []
+let previousDetailsHtml = ''
+
 let timerId = 0
 let alertId = 0
-let watching = false
+let refreshInterval = 15000
+
+let theTable = {}
+let hospitals = {}
 let centresData = {}
 let statesSelect = {}
+let filtersHolder = {}
 let filtersSideNav = {}
 let districtsSelect = {}
+let availabilityText = {}
+let loadingIndicator = {}
 let filterInclusions = {}
-let previousDetailsHtml = ''
+let lastRefreshedText = {}
+let notFoundImgContainer = {}
 let browserNotificationCheckbox = {}
-let previousSessionCountMap = new Map()
 
-let refreshInterval = 15000
+let previousSessionCountMap = new Map()
 
 async function onload()
 {
     document.getElementById('diozz').setAttribute('href', relativePath)
-
     //states = await buildAllDistrictIdMap()
     states = await buildAllDistrictIdMapLocal()
 
@@ -29,9 +37,16 @@ async function onload()
         if (watching) return "Currently watching is in progress. Are you sure, you want to close?"
     }
 
+    theTable = document.getElementById('table')
+    hospitals = document.getElementById('hospitals')
     statesSelect = document.getElementById('states')
     districtsSelect = document.getElementById('districts')
+    filtersHolder = document.getElementById('filtersHolder')
+    availabilityText = document.getElementById('availability')
     filtersSideNav = document.getElementById('filtersSideNav')
+    lastRefreshedText = document.getElementById('last-refreshed')
+    loadingIndicator = document.getElementById('loadingIndicator')
+    notFoundImgContainer = document.getElementById('notFoundImgContainer')
 
     statesSelect.innerHTML = ''
     for (let i = 0; i < states.length; i++)
@@ -128,6 +143,7 @@ function fillDistricts()
 
 async function refreshTable(renderFilter)
 {
+    setLoading(true)
     let watchDistrictId = districtsSelect.value
     let todayString = getTodayString()
 
@@ -138,7 +154,7 @@ async function refreshTable(renderFilter)
     let responseAsJson = await response.json()
 
     centresData = JSON.parse(JSON.stringify(responseAsJson.centers))
-    document.getElementById('last-refreshed').innerHTML = "Last refreshed: <b>" + getTodayString(true) + "</b>"
+    lastRefreshedText.innerHTML = "Last refreshed: <b>" + getTodayString(true) + "</b>"
 
     main(responseAsJson.centers, renderFilter)
 }
@@ -164,24 +180,22 @@ function main(data, renderFilter)
         previousSessionCountMap.clear()
         let currentDistrict = districtsSelect.options[districtsSelect.selectedIndex].text
 
-        document.getElementById('notFoundImgContainer').style.display = "grid"
-        document.getElementById('table').style.display = "none"
-        document.getElementById('availability').innerHTML = "<span class='nonEmph'> Vaccines available in <span class='emph'>0/0</span> vaccination centres.</span>"
+        notFoundImgContainer.style.display = "grid"
+        availabilityText.innerHTML = "<span class='nonEmph'> Vaccines available in <span class='emph'>0/0</span> vaccination centres.</span>"
+        setLoading(false, false)
 
         if (!watching) document.getElementById('watchHeading').innerHTML = "Get pinged when new a vaccination slot becomes available. Press <span class='pop'>Start Watching</span> to start monitoring <span class='pop'>" + currentDistrict + "</span> district."
         document.title = "CoWatch | " + currentDistrict
 
-        if (renderFilter)
-            document.getElementById('filtersHolder').style.display = "none"
+        if (renderFilter) filtersHolder.style.display = "none"
 
         return
     }
-    document.getElementById('notFoundImgContainer').style.display = "none"
-    if (!watching && centresData.length != 0) document.getElementById('filtersHolder').style.display = "flex"
-    document.getElementById('table').style.display = "block"
+    notFoundImgContainer.style.display = "none"
+    if (!watching && centresData.length != 0) filtersHolder.style.display = "flex"
 
     let availableHospCount = data.filter(x => x.sessions && x.sessions.some(y => y.available_capacity > 0)).length
-    document.getElementById('availability').innerHTML = "<span class='nonEmph'>Vaccines available in <span class='emph'>" + availableHospCount + "/" + data.length + "</span> vaccination centres.</span>"
+    availabilityText.innerHTML = "<span class='nonEmph'>Vaccines available in <span class='emph'>" + availableHospCount + "/" + data.length + "</span> vaccination centres.</span>"
 
     if (renderFilter) renderFiltersInputs(data)
 
@@ -211,7 +225,8 @@ function main(data, renderFilter)
         detailsHtml += "</tr>"
     }
 
-    document.getElementById('hospitals').innerHTML = detailsHtml
+    hospitals.innerHTML = detailsHtml
+    setLoading(false)
 
     let currentDistrict = districtsSelect.options[districtsSelect.selectedIndex].text
     if (!watching) document.getElementById('watchHeading').innerHTML = "Get pinged when new a vaccination slot becomes available. Press <span class='pop'>Start Watching</span> to start monitoring <span class='pop'>" + currentDistrict + "</span> district."
@@ -333,7 +348,7 @@ function stop()
     document.getElementById('stop-button').setAttribute("disabled", "true")
     document.getElementById('notificationSettings').style.display = "flex"
     if (centresData.length !== 0)
-        setTimeout(() => { document.getElementById('filtersHolder').style.display = "flex" }, 500)
+        setTimeout(() => { filtersHolder.style.display = "flex" }, 500)
     let filterControls = document.getElementById('filterControls')
     filterControls.classList.remove("heightCollapse")
     filterControls.classList.add("heightExpand")
@@ -350,12 +365,13 @@ function start()
     filterControls.classList.remove("heightExpand")
     filtersSideNav.classList.add("widthCollapse")
     filtersSideNav.classList.remove("widthExpand")
+
     previousDetailsHtml = ''
     previousSessionCountMap.clear()
     document.getElementById('start-button').setAttribute("disabled", "true")
     document.getElementById('stop-button').removeAttribute("disabled")
     document.getElementById('notificationSettings').style.display = "none"
-    document.getElementById('filtersHolder').style.display = "none"
+    filtersHolder.style.display = "none"
 
     document.getElementById('watchHeading').innerHTML = "<div class='watchingText'> <div id='watchingDot'></div>CoWatch is now monitoring Co-WIN portal every " +
         Math.round(refreshInterval / 1000) +
@@ -398,4 +414,10 @@ function mute()
     alertId = 0
 
     document.getElementById('muteAlertButton').style.display = "none"
+}
+
+function setLoading(makeVisible, setTable = true)
+{
+    loadingIndicator.style.display = makeVisible ? "block" : "none"
+    if (setTable) theTable.style.display = makeVisible ? "none" : "block"
 }
