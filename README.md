@@ -8,8 +8,7 @@ This program **cannot book** a vaccination slot for you, instead it uses the Co-
 
 Checkout a live version of CoWatch [here](https://diozz.github.io/cowatch).
 
-![](https://i.imgur.com/xnQt487.gif)
-
+![cowatch.gif](https://user-images.githubusercontent.com/13608193/119222937-6b5e1500-bb14-11eb-8ea4-7232452fe488.gif)
 
 # The Co-WIN API 
 
