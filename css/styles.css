@@ -507,6 +507,7 @@ nav {
 }
 .windows8 {
     position: relative;
+    top: -18px;
     width: 54px;
     height: 54px;
     margin: auto;

@@ -143,7 +143,7 @@ function fillDistricts()
 
 async function refreshTable(renderFilter)
 {
-    setLoading(true)
+    setVisibility("spinner")
     let watchDistrictId = districtsSelect.value
     let todayString = getTodayString()
 
@@ -180,9 +180,8 @@ function main(data, renderFilter)
         previousSessionCountMap.clear()
         let currentDistrict = districtsSelect.options[districtsSelect.selectedIndex].text
 
-        notFoundImgContainer.style.display = "grid"
         availabilityText.innerHTML = "<span class='nonEmph'> Vaccines available in <span class='emph'>0/0</span> vaccination centres.</span>"
-        setLoading(false, false)
+        setVisibility("notFound")
 
         if (!watching) document.getElementById('watchHeading').innerHTML = "Get pinged when new a vaccination slot becomes available. Press <span class='pop'>Start Watching</span> to start monitoring <span class='pop'>" + currentDistrict + "</span> district."
         document.title = "CoWatch | " + currentDistrict
@@ -226,7 +225,7 @@ function main(data, renderFilter)
     }
 
     hospitals.innerHTML = detailsHtml
-    setLoading(false)
+    setVisibility("table")
 
     let currentDistrict = districtsSelect.options[districtsSelect.selectedIndex].text
     if (!watching) document.getElementById('watchHeading').innerHTML = "Get pinged when new a vaccination slot becomes available. Press <span class='pop'>Start Watching</span> to start monitoring <span class='pop'>" + currentDistrict + "</span> district."
@@ -416,8 +415,9 @@ function mute()
     document.getElementById('muteAlertButton').style.display = "none"
 }
 
-function setLoading(makeVisible, setTable = true)
+function setVisibility(item)
 {
-    loadingIndicator.style.display = makeVisible ? "block" : "none"
-    if (setTable) theTable.style.display = makeVisible ? "none" : "block"
+    theTable.style.display = item === "table" ? "block" : "none"
+    loadingIndicator.style.display = item === "spinner" ? "block" : "none"
+    notFoundImgContainer.style.display = item === "notFound" ? "grid" : "none"
 }
