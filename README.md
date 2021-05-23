@@ -8,8 +8,7 @@ This program **cannot book** a vaccination slot for you, instead it uses the Co-
 
 Checkout a live version of CoWatch [here](https://diozz.github.io/cowatch).
 
-![](https://i.imgur.com/xnQt487.gif)
-
+![cowatch.gif](https://user-images.githubusercontent.com/13608193/119222937-6b5e1500-bb14-11eb-8ea4-7232452fe488.gif)
 
 # The Co-WIN API 
 
@@ -42,8 +41,8 @@ Refer [`districts.json`](https://github.com/diozz/cowatch/blob/main/assets/distr
 To modify CoWatch:
 
 - Clone the repository. using `! Git Clone https://github.com/diozz/cowatch.git`
-- To modify the watching time interval, edit the `refreshInterval` variable [here](https://github.com/diozz/cowatch/blob/main/js/cowatch.js#L13) and set the value in milliseconds. Remember not to modify intervals to below `3000ms` to remain compliant with the [Co-WIN Public API](https://apisetu.gov.in/public/marketplace/api/cowin/cowin-public-v2) regulations.
-- By default, CoWatch uses a [cached version](https://github.com/diozz/cowatch/blob/main/assets/districts.json) of state and district data for better load times. Now, this works fine, but if the back-end were to modify the district-id mappings, use `buildAllDistrictIdMap` method in [`districts.js`](https://github.com/diozz/cowatch/blob/main/js/districts.js#L21) to re-generate the updated district-id mappings. Or you can also uncomment [this](https://github.com/diozz/cowatch/blob/main/js/cowatch.js#L17) line instead, to prevent using cached data.
+- To modify the watching time interval, edit the `refreshInterval` variable [here](https://github.com/diozz/cowatch/blob/main/js/cowatch.js#L7) and set the value in milliseconds. Remember not to modify intervals to below `3000ms` to remain compliant with the [Co-WIN Public API](https://apisetu.gov.in/public/marketplace/api/cowin/cowin-public-v2) regulations.
+- By default, CoWatch uses a [cached version](https://github.com/diozz/cowatch/blob/main/assets/districts.json) of state and district data for better load times. Now, this works fine, but if the back-end were to modify the district-id mappings, use `buildAllDistrictIdMap` method in [`districts.js`](https://github.com/diozz/cowatch/blob/main/js/districts.js#L21) to re-generate the updated district-id mappings. Or you can also uncomment [this](https://github.com/diozz/cowatch/blob/main/js/cowatch.js#L28) line instead, to prevent using cached data.
 
 ---
 
