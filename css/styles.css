@@ -114,8 +114,7 @@ td {
     margin-bottom: 55px;
     border-collapse: collapse;
     border-bottom: 2px solid #02203c;
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1), 0px 10px 20px rgba(0, 0, 0, 0.05), 0px 20px 20px rgba(0, 0, 0, 0.05),
-        0px 30px 20px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     display: flex;
     flex-direction: column;
     min-height: 525px;
@@ -488,7 +487,11 @@ nav {
     place-content: center;
 }
 .side {
-    display: block;
+    min-height: 674px;
+    top: 20px;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
     margin-right: 10px;
     margin-bottom: 55px;
     border-bottom: 2px solid #02203c;

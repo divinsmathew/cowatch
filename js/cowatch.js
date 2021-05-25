@@ -196,8 +196,12 @@ function main(data, renderFilter)
     let availableHospCount = data.filter(x => x.sessions && x.sessions.some(y => y.available_capacity > 0)).length
     availabilityText.innerHTML = "<span class='nonEmph'>Vaccines available in <span class='emph'>" + availableHospCount + "/" + data.length + "</span> vaccination centres.</span>"
 
-    if (renderFilter) renderFiltersInputs(data)
-
+    if (renderFilter)
+    {
+        renderFiltersInputs(data)
+        document.getElementById('filtersSideNav').style.height = (document.getElementById('filtersHolder').clientHeight + 47) + 'px'
+    }
+    
     let detailsHtml = ''
     for (let i = 0; i < data.length; i++)
     {
