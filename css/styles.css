@@ -267,7 +267,6 @@ ul li label {
     top: -10px;
     position: relative;
     min-height: 400px;
-    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
