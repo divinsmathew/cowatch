@@ -260,8 +260,33 @@ ul li label {
     cursor: pointer;
 }
 #notFoundImgContainer {
-    min-height: 400px;
+    min-height: 300px;
     place-items: center;
+}
+#failed {
+    top: -10px;
+    position: relative;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#failed span {
+    user-select: none;
+    border: 1px #be0000 solid;
+    padding: 3px 10px 5px 10px;
+    color: #be0000;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+#failed span:hover {
+    color: #fff;
+    background-color: #be0000;
+}
+#failed h3 {
+    color: #be0000;
 }
 .hidden {
     display: none;

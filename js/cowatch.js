@@ -8,6 +8,7 @@ let refreshInterval = 15000
 
 let theTable = {}
 let hospitals = {}
+let failedMsg = {}
 let centresData = {}
 let statesSelect = {}
 let filtersHolder = {}
@@ -38,6 +39,7 @@ async function onload()
     }
 
     theTable = document.getElementById('table')
+    failedMsg = document.getElementById('failed')
     hospitals = document.getElementById('hospitals')
     statesSelect = document.getElementById('states')
     districtsSelect = document.getElementById('districts')
@@ -150,7 +152,16 @@ async function refreshTable(renderFilter)
     //let endpoint = relativePath + "assets/test.json"
     let endpoint = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=" + watchDistrictId + "&date=" + todayString
 
-    let response = await fetch(endpoint)
+    let response = ""
+    try
+    {
+        response = await fetch(endpoint)
+    }
+    catch
+    {
+        setVisibility("failed")
+        return
+    }
     let responseAsJson = await response.json()
 
     centresData = JSON.parse(JSON.stringify(responseAsJson.centers))
@@ -424,6 +435,7 @@ function mute()
 function setVisibility(item)
 {
     theTable.style.display = item === "table" ? "block" : "none"
+    failedMsg.style.display = item === "failed" ? "flex" : "none"
     loadingIndicator.style.display = item === "spinner" ? "block" : "none"
     notFoundImgContainer.style.display = item === "notFound" ? "grid" : "none"
 }
