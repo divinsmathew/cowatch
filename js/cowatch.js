@@ -199,9 +199,11 @@ function main(data, renderFilter)
     if (renderFilter)
     {
         renderFiltersInputs(data)
-        document.getElementById('filtersSideNav').style.height = (document.getElementById('filtersHolder').clientHeight + 47) + 'px'
+        let sideHeight = document.getElementById('filtersHolder').clientHeight
+        if (sideHeight !== 0)
+            document.getElementById('filtersSideNav').style.height = (sideHeight + 47) + 'px'
     }
-    
+
     let detailsHtml = ''
     for (let i = 0; i < data.length; i++)
     {
