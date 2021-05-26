@@ -1,6 +1,6 @@
 # Overview
 
-Born out of necessity, this project helps you book your COVID-19 vaccination slot (if you live in India). Get pinged when a new vaccination slot becomes available in your area through sound alerts and browser notifications. An `IFTT` integration to receive mobile notifications is in the works.
+Born out of necessity, this project helps you book your COVID-19 vaccination slot (if you live in India). Get pinged when a new vaccination slot becomes available in your area through sound alerts and browser notifications.
 
 This program **cannot book** a vaccination slot for you, instead it uses the Co-WIN APIs to alert you when a new slot becomes available.
 
