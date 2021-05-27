@@ -445,8 +445,8 @@ function mute()
 
 function setVisibility(item)
 {
-    theTable.style.display = item === "table" ? "none" : "none"
-    failedMsg.style.display = item === "failed" ? "flex" : "flex"
+    theTable.style.display = item === "table" ? "block" : "none"
+    failedMsg.style.display = item === "failed" ? "flex" : "none"
     loadingIndicator.style.display = item === "spinner" ? "block" : "none"
     notFoundImgContainer.style.display = item === "notFound" ? "flex" : "none"
 }
