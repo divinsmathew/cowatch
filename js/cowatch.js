@@ -26,17 +26,6 @@ let previousSessionCountMap = new Map()
 async function onload()
 {
     document.getElementById('diozz').setAttribute('href', relativePath)
-    //states = await buildAllDistrictIdMap()
-    states = await buildAllDistrictIdMapLocal()
-
-    window.onpopstate = () =>
-    {
-        window.location.href = window.location.href
-    }
-    window.onbeforeunload = () =>
-    {
-        if (watching) return "Currently watching is in progress. Are you sure, you want to close?"
-    }
 
     theTable = document.getElementById('table')
     failedMsg = document.getElementById('failed')
@@ -49,6 +38,26 @@ async function onload()
     lastRefreshedText = document.getElementById('last-refreshed')
     loadingIndicator = document.getElementById('loadingIndicator')
     notFoundImgContainer = document.getElementById('notFoundImgContainer')
+
+    //states = await buildAllDistrictIdMap()
+    states = await buildAllDistrictIdMapLocal()
+
+    filtersSideNav.style.height = (window.innerHeight - 40) + 'px'
+    document.getElementById('tableContainer').style.minHeight = (window.innerHeight - 185) + 'px'
+    window.onresize = function ()
+    {
+        filtersSideNav.style.height = (window.innerHeight - 40) + 'px'
+        document.getElementById('tableContainer').style.minHeight = (window.innerHeight - 185) + 'px'
+    };
+
+    window.onpopstate = () =>
+    {
+        window.location.href = window.location.href
+    }
+    window.onbeforeunload = () =>
+    {
+        if (watching) return "Currently watching is in progress. Are you sure, you want to close?"
+    }
 
     statesSelect.innerHTML = ''
     for (let i = 0; i < states.length; i++)
@@ -124,7 +133,7 @@ async function onload()
     else
         fillDistricts()
 
-    document.getElementById('watchHeading').innerHTML = "Get pinged when a new vaccination slot becomes available. Press <span class='pop'>Start Watching</span> to start monitoring <span class='pop'>" + districtsSelect.options[districtsSelect.selectedIndex].text + "</span> district."
+    document.getElementById('watchHeading').innerHTML = "<div style='text-align:center;'>Get pinged when a new vaccination slot becomes available. Press <span class='pop'>Start Watching</span> to start monitoring <span class='pop'>" + districtsSelect.options[districtsSelect.selectedIndex].text + "</span> district.</div>"
 
     resetFilter()
     refreshTable(true)
@@ -194,7 +203,7 @@ function main(data, renderFilter)
         availabilityText.innerHTML = "<span class='nonEmph'> Vaccines available in <span class='emph'>0/0</span> vaccination centres.</span>"
         setVisibility("notFound")
 
-        if (!watching) document.getElementById('watchHeading').innerHTML = "Get pinged when new a vaccination slot becomes available. Press <span class='pop'>Start Watching</span> to start monitoring <span class='pop'>" + currentDistrict + "</span> district."
+        if (!watching) document.getElementById('watchHeading').innerHTML = "<div style='text-align:center;'>Get pinged when a new vaccination slot becomes available. Press <span class='pop'>Start Watching</span> to start monitoring <span class='pop'>" + currentDistrict + "</span> district.</div>"
         document.title = "CoWatch | " + currentDistrict
 
         if (renderFilter) filtersHolder.style.display = "none"
@@ -212,7 +221,8 @@ function main(data, renderFilter)
         renderFiltersInputs(data)
         let sideHeight = document.getElementById('filtersHolder').clientHeight
         if (sideHeight !== 0)
-            document.getElementById('filtersSideNav').style.height = (sideHeight + 47) + 'px'
+            // document.getElementById('filtersSideNav').style.height = (sideHeight + 47) + 'px'
+            document.getElementById('filtersSideNav').style.height = (window.innerHeight - 40) + 'px'
     }
 
     let detailsHtml = ''
@@ -245,7 +255,7 @@ function main(data, renderFilter)
     setVisibility("table")
 
     let currentDistrict = districtsSelect.options[districtsSelect.selectedIndex].text
-    if (!watching) document.getElementById('watchHeading').innerHTML = "Get pinged when new a vaccination slot becomes available. Press <span class='pop'>Start Watching</span> to start monitoring <span class='pop'>" + currentDistrict + "</span> district."
+    if (!watching) document.getElementById('watchHeading').innerHTML = "<div style='text-align:center;'>Get pinged when a new vaccination slot becomes available. Press <span class='pop'>Start Watching</span> to start monitoring <span class='pop'>" + currentDistrict + "</span> district.</div>"
     document.title = "CoWatch | " + currentDistrict
 
     if (previousDetailsHtml !== '' && previousSessionCountMap.size !== 0)
@@ -371,7 +381,7 @@ function stop()
     filtersSideNav.classList.remove("widthCollapse")
     filtersSideNav.classList.add("widthExpand")
 
-    document.getElementById('watchHeading').innerHTML = "Get pinged when a new vaccination slot becomes available. Press Start Watching to start monitoring <span class='pop'>" + districtsSelect.options[districtsSelect.selectedIndex].text + "</span> district."
+    document.getElementById('watchHeading').innerHTML = "<div style='text-align:center;'>Get pinged when a new vaccination slot becomes available. Press Start Watching to start monitoring <span class='pop'>" + districtsSelect.options[districtsSelect.selectedIndex].text + "</span> district.</div>"
 }
 
 function start()
@@ -389,11 +399,12 @@ function start()
     document.getElementById('notificationSettings').style.display = "none"
     filtersHolder.style.display = "none"
 
-    document.getElementById('watchHeading').innerHTML = "<div class='watchingText'> <div id='watchingDot'></div>CoWatch is now monitoring Co-WIN portal every " +
+    document.getElementById('watchHeading').innerHTML =
+        "<div class='watchingText'> <div id='watchingDot'></div><span>CoWatch is now monitoring Co-WIN portal every " +
         Math.round(refreshInterval / 1000) +
-        " seconds.</div> You'll be notified if CoWatch finds new vaccination slots in " +
+        " seconds.</span></div> <div style='text-align:center;'>You'll be notified if CoWatch finds new vaccination slots in " +
         "<span class='pop'>" + districtsSelect.options[districtsSelect.selectedIndex].text + "</span>" +
-        " district. <span class='pop'> Keep This Tab Open. </span>"
+        " district. <span class='pop'> Keep This Tab Open. </span></div>"
 
     resetFilter()
     refreshTable(true)
@@ -434,8 +445,8 @@ function mute()
 
 function setVisibility(item)
 {
-    theTable.style.display = item === "table" ? "block" : "none"
-    failedMsg.style.display = item === "failed" ? "flex" : "none"
+    theTable.style.display = item === "table" ? "none" : "none"
+    failedMsg.style.display = item === "failed" ? "flex" : "flex"
     loadingIndicator.style.display = item === "spinner" ? "block" : "none"
-    notFoundImgContainer.style.display = item === "notFound" ? "grid" : "none"
+    notFoundImgContainer.style.display = item === "notFound" ? "flex" : "none"
 }
