@@ -10,10 +10,10 @@ function createSentence(array, minify)
         let difference = array.length - 2
         return array[0] + ", " + array[1] + " and " + difference + " other" + (difference > 1 ? "s." : ".")
     }
-    if (minify) return array.map((x, i) => i === 1 ? " and " + x : x).join('')
+    if (minify) return array.map((x, i) => i === 1 ? " and " + x : x).join('') + '.'
     array = array.map((x, i) =>
     {
-        if (i === 0) return "<b>" + x + "</b>"
+        if (i === 0) return "<b>" + x + (array.length === 1 ? "</b>." : "</b>")
         if (i === array.length - 1) return " and <b>" + x + "</b>."
         return ", <b>" + x + "</b>"
     })
@@ -43,7 +43,8 @@ function isNumeric(str)
     return !isNaN(str) && !isNaN(parseFloat(str))
 }
 
-function getUrlParts(url) {
+function getUrlParts(url)
+{
     var a = document.createElement('a');
     a.href = url;
 

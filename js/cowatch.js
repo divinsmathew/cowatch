@@ -9,6 +9,7 @@ let refreshInterval = 15000
 let theTable = {}
 let hospitals = {}
 let failedMsg = {}
+let filersStrip = {}
 let centresData = {}
 let statesSelect = {}
 let filtersHolder = {}
@@ -18,7 +19,9 @@ let availabilityText = {}
 let loadingIndicator = {}
 let filterInclusions = {}
 let lastRefreshedText = {}
+let clearFiltersButton = {}
 let notFoundImgContainer = {}
+let watchFilteredCheckbox = {}
 let browserNotificationCheckbox = {}
 
 let previousSessionCountMap = new Map()
@@ -31,28 +34,31 @@ async function onload()
     failedMsg = document.getElementById('failed')
     hospitals = document.getElementById('hospitals')
     statesSelect = document.getElementById('states')
+    filersStrip = document.getElementById('filersStrip')
     districtsSelect = document.getElementById('districts')
     filtersHolder = document.getElementById('filtersHolder')
     availabilityText = document.getElementById('availability')
     filtersSideNav = document.getElementById('filtersSideNav')
     lastRefreshedText = document.getElementById('last-refreshed')
     loadingIndicator = document.getElementById('loadingIndicator')
+    clearFiltersButton = document.getElementById('clearFiltersButton')
     notFoundImgContainer = document.getElementById('notFoundImgContainer')
+    watchFilteredCheckbox = document.getElementById('watchFilteredCheckbox')
 
     //states = await buildAllDistrictIdMap()
     states = await buildAllDistrictIdMapLocal()
 
     filtersSideNav.style.height = (window.innerHeight - 40) + 'px'
-    document.getElementById('tableContainer').style.minHeight = (window.innerHeight - 185) + 'px'
+    document.getElementById('tableContainer').style.minHeight = (window.innerHeight - 190) + 'px'
     window.onresize = function ()
     {
         filtersSideNav.style.height = (window.innerHeight - 40) + 'px'
-        document.getElementById('tableContainer').style.minHeight = (window.innerHeight - 185) + 'px'
+        document.getElementById('tableContainer').style.minHeight = (window.innerHeight - 190) + 'px'
     };
 
     window.onpopstate = () =>
     {
-        window.location.href = window.location.href
+        window.location.href = window.location.href //ikr
     }
     window.onbeforeunload = () =>
     {
@@ -80,6 +86,12 @@ async function onload()
         window.history.pushState('', '', relativePath + "?districtId=" + districtsSelect.value)
         previousDetailsHtml = ''
         previousSessionCountMap.clear()
+        refreshTable(true)
+    })
+
+    clearFiltersButton.addEventListener('click', () =>
+    {
+        resetFilter()
         refreshTable(true)
     })
 
@@ -207,6 +219,7 @@ function main(data, renderFilter)
         document.title = "CoWatch | " + currentDistrict
 
         if (renderFilter) filtersHolder.style.display = "none"
+        clearFiltersButton.style.display = (filterInclusions.fee.length === 0 && filterInclusions.dates.length === 0 && filterInclusions.vaccines.length === 0 && filterInclusions.ageGroups.length === 0 && filterInclusions.slots.length === 2) ? 'none' : 'inline'
 
         return
     }
@@ -216,14 +229,7 @@ function main(data, renderFilter)
     let availableHospCount = data.filter(x => x.sessions && x.sessions.some(y => y.available_capacity > 0)).length
     availabilityText.innerHTML = "<span class='nonEmph'>Vaccines available in <span class='emph'>" + availableHospCount + "/" + data.length + "</span> vaccination centres.</span>"
 
-    if (renderFilter)
-    {
-        renderFiltersInputs(data)
-        let sideHeight = document.getElementById('filtersHolder').clientHeight
-        if (sideHeight !== 0)
-            // document.getElementById('filtersSideNav').style.height = (sideHeight + 47) + 'px'
-            document.getElementById('filtersSideNav').style.height = (window.innerHeight - 40) + 'px'
-    }
+    if (renderFilter) renderFiltersInputs(data)
 
     let detailsHtml = ''
     for (let i = 0; i < data.length; i++)
@@ -273,15 +279,31 @@ function main(data, renderFilter)
             if (previousSessionCountMap.has(key))
             {
                 if (value.slots > previousSessionCountMap.get(key).slots)
-                    newCentres.add(value.name)
+                    checkFilterAndAdd(newCentres, key, value)
             }
             else if (value.slots > 0)
+                checkFilterAndAdd(newCentres, key, value)
+        }
+
+        function checkFilterAndAdd(newCentres, key, value)
+        {
+            if (!watchFilteredCheckbox.checked)
                 newCentres.add(value.name)
+            else
+                for (let i = 0; i < data.length; i++)
+                    for (let j = 0; j < data[i].sessions.length; j++)
+                        if (data[i].sessions[j].session_id === key)
+                        {
+                            newCentres.add(value.name)
+                            return
+                        }
         }
 
         if (newCentres.size > 0 && watching) playAlert(Array.from(newCentres))
     }
 
+    clearFiltersButton.style.display = (filterInclusions.fee.length === 0 && filterInclusions.dates.length === 0 && filterInclusions.vaccines.length === 0 && filterInclusions.ageGroups.length === 0 && filterInclusions.slots.length === 2) ? 'none' : 'inline'
+    
     buildPreviousSessionCountMap()
     previousDetailsHtml = detailsHtml
 }
@@ -370,6 +392,7 @@ function stop()
 {
     watching = false
     clearInterval(timerId)
+    document.getElementById('tableInfoStrip').classList.add("hidden")
     document.getElementById('start-button').removeAttribute("disabled")
     document.getElementById('stop-button').setAttribute("disabled", "true")
     document.getElementById('notificationSettings').style.display = "flex"
@@ -406,11 +429,23 @@ function start()
         "<span class='pop'>" + districtsSelect.options[districtsSelect.selectedIndex].text + "</span>" +
         " district. <span class='pop'> Keep This Tab Open. </span></div>"
 
-    resetFilter()
-    refreshTable(true)
+    if (watchFilteredCheckbox.checked)
+    {
+        filersStrip.innerHTML = filterInclusions.fee.map(item => "<span>" + item + "</span>").join('') +
+            filterInclusions.dates.map(item => "<span>" + item + "</span>").join('') +
+            filterInclusions.vaccines.map(item => "<span>" + item + "</span>").join('') +
+            filterInclusions.ageGroups.map(item => "<span>" + "Age " + item + "+</span>").join('') +
+            ["dose1", "dose2"].filter(item => !filterInclusions.slots.includes(item)).map(item => "<span>" + ((item) => { if (item === "dose1") return "Dose 1"; else if (item === "dose2") return "Dose 2"; else return item })(item) + "</span>").join('')
+
+        if (filersStrip.innerHTML.trim() !== "") document.getElementById('tableInfoStrip').classList.remove("hidden")
+    }
+    else
+        resetFilter()
+
+    refreshTable(!watchFilteredCheckbox.checked)
     clearInterval(timerId)
-    timerId = setInterval(() => { refreshTable(true) }, refreshInterval)
     watching = true
+    timerId = setInterval(() => { refreshTable(!watchFilteredCheckbox.checked) }, refreshInterval)
 }
 
 function playAlert(newCentres)

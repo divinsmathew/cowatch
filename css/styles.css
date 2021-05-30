@@ -1,5 +1,5 @@
 body {
-    padding: 0;
+    /* padding: 0; */
     margin: 0;
     background-color: #f6f9fc;
     font-family: "Open Sans", "Helvetica", "Arial", sans-serif;
@@ -111,7 +111,7 @@ td {
 }
 #tableContainer {
     background-color: #ffffff;
-    margin-bottom: 55px;
+    margin-bottom: 23px;
     border-collapse: collapse;
     border-bottom: 2px solid #02203c;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
@@ -122,6 +122,9 @@ td {
 .groupHead {
     font-size: 0.8rem;
     margin: 0 0 2px 5px;
+}
+.checkboxHolder {
+    text-align: center;
 }
 select {
     box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 12%), 0 1px 5px 0 rgb(0 0 0 / 20%);
@@ -182,10 +185,30 @@ select:focus {
     align-items: center;
 }
 #tableInfo {
-    display: flex;
     padding: 20px;
     border-bottom: 1px #e6e6e6 solid;
+}
+#tableInfoHeader {
+    display: flex;
     justify-content: space-between;
+}
+#tableInfoStrip {
+    margin: 10px 0 0 0;
+    font-size: 0.8rem;
+    color: #3c3c3c;
+}
+#filersStrip {
+    margin-top: 10px;
+}
+#filersStrip span {
+    overflow: hidden;
+    user-select: none;
+    margin-right: 10px;
+    border: 1.5px #02203c solid;
+    padding: 2px 6px 3px 6px;
+    font-weight: bold;
+    color: #02203c;
+    border-radius: 5px;
 }
 #states {
     margin-right: 7px;
@@ -291,9 +314,6 @@ ul li label {
 }
 #failed h3 {
     color: #be0000;
-}
-.hidden {
-    display: none;
 }
 #start-button {
     margin-right: 10px;
@@ -444,13 +464,15 @@ ul li label {
     align-items: center;
     justify-content: center;
 }
-#notificationSettings input {
-    margin-right: 10px;
+#notificationSettings label::before {
+    margin-right: 3px;
 }
-#notificationSettings label {
-    cursor: pointer;
+#notificationSettings label span {
+    position: relative;
+    top: -1px;
 }
 input[type="checkbox"] + label {
+    user-select: none;
     display: block;
     cursor: pointer;
     margin-bottom: 4px;
@@ -502,7 +524,7 @@ nav {
     min-width: 1240px;
 }
 .limitStatWidth {
-    margin: 25px 20px 10px 20px;
+    margin: 25px 20px 5px 20px;
     width: 1240px;
 }
 .root {
@@ -511,6 +533,30 @@ nav {
     justify-content: center;
     place-items: center;
     flex-direction: column;
+}
+.clearButton {
+    overflow: hidden;
+    user-select: none;
+    border: 0.8px #fff solid;
+    padding: 3px 10px 0 10px;
+    color: #fff;
+    height: 20px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    border-radius: 8px;
+}
+.clearButton:hover {
+    color: #02203c;
+    background-color: #fff;
+}
+.clearButton:active {
+    color: #02203c;
+    background-color: #c7c7c7;
+}
+.flex-wide {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 .content {
     width: 1240px;
@@ -524,7 +570,7 @@ nav {
     flex-direction: column;
     position: sticky;
     margin-right: 10px;
-    margin-bottom: 55px;
+    margin-bottom: 23px;
     border-bottom: 2px solid #02203c;
 }
 .main {
@@ -637,4 +683,7 @@ nav {
     background-color: #afafaf;
     border: 1px solid transparent;
     background-clip: content-box;
+}
+.hidden {
+    display: none;
 }

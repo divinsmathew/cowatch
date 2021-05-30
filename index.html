@@ -33,7 +33,13 @@
       <div id="notificationSettings">
         <div class="checkboxHolder">
           <input type="checkbox" id="browserNotificationCheckbox">
-          <label for="browserNotificationCheckbox">Receive browser notifications</label>
+          <label for="browserNotificationCheckbox">
+            <span>Browser notifications</span>
+          </label>
+          <input type="checkbox" id="watchFilteredCheckbox">
+          <label for="watchFilteredCheckbox">
+            <span>Watch only filtered slots</span>
+          </label>
         </div>
       </div>
       <div id="foundBanner">
@@ -69,7 +75,10 @@
   <div class="root">
     <div class="content">
       <div id="filtersSideNav" class="side card widthExpand">
-        <div class="headBack">Filter.</div>
+        <div class="headBack flex-wide">
+          <span>Filter.</span>
+          <span id="clearFiltersButton" class="clearButton hidden">Clear all</span>
+        </div>
         <div id="filtersHolder">
           <div class="filterGroup">
             <span class="filterGroupHead">Fee</span>
@@ -91,7 +100,7 @@
             </ul>
           </div>
           <div class="filterGroup">
-            <span class="filterGroupHead">Slots</span>
+            <span class="filterGroupHead">Slots for</span>
             <ul class="filterList" id="slotsFilterList">
             </ul>
           </div>
@@ -113,18 +122,24 @@
         </div>
         <div id="tableContainer">
           <div id="tableInfo">
-            <div>
-              <div id="availability"></div>
-              <div id="last-refreshed"></div>
+            <div id="tableInfoHeader">
+              <div>
+                <div id="availability"></div>
+                <div id="last-refreshed"></div>
+              </div>
+              <div class="flex">
+                <button id="refresh-button" onclick="refreshTable(false);">
+                  <img src="./assets/img/reload.png" alt="Reload">
+                  <span>Refresh</span>
+                </button>
+                <button onclick="window.open('https://selfregistration.cowin.gov.in/', '_blank').focus();">
+                  <span>Register @CoWin</span>
+                </button>
+              </div>
             </div>
-            <div class="flex">
-              <button id="refresh-button" onclick="refreshTable(false);">
-                <img src="./assets/img/reload.png" alt="Reload">
-                <span>Refresh</span>
-              </button>
-              <button onclick="window.open('https://selfregistration.cowin.gov.in/', '_blank').focus();">
-                <span>Register @CoWin</span>
-              </button>
+            <div id="tableInfoStrip" class="hidden">
+              <div>Watch is filtered by</div>
+              <div id="filersStrip"></div>
             </div>
           </div>
           <div id="notFoundImgContainer" class="hidden">
