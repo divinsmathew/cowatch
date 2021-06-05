@@ -102,6 +102,7 @@ td {
     padding: 10px 10px 5px 10px;
 }
 .subHeaderRow2 td {
+    white-space: nowrap;
     padding: 0 10px 10px 10px;
     border-bottom: 1px solid #a8a8a8;
 }
