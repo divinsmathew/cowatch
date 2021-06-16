@@ -417,6 +417,9 @@ ul li label {
     font-size: 1.3rem;
     color: #ff4d4d;
 }
+.red{
+    color: #7e0000;
+}
 #foundBanner {
     text-align: left;
     display: none;

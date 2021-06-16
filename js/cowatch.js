@@ -205,6 +205,7 @@ function buildPreviousSessionCountMap()
 function main(data, renderFilter)
 {
     data = applyExcemptionFilters(data)
+    console.log(data)
 
     if (!data || data.length === 0)
     {
@@ -239,12 +240,12 @@ function main(data, renderFilter)
         detailsHtml += "<tr>"
         detailsHtml += "<td rowspan='" + currentHospital.sessions.length + "'>" + (i + 1) + ".</td>"
         detailsHtml += "<td class='nameWidthLimit' rowspan='" + currentHospital.sessions.length + "'><b>" + currentHospital.name + "</b>, " + (currentHospital.block_name.toLowerCase() === "not applicable" ? "" : currentHospital.block_name) + "<br><span class='address'>" + currentHospital.address + ", " + currentHospital.pincode + "</span>" + "</td>"
-        detailsHtml += "<td rowspan='" + currentHospital.sessions.length + "'>" + currentHospital.fee_type + "</td>"
 
         for (let j = 0; j < currentHospital.sessions.length; j++)
         {
             if (j > 0) detailsHtml += "<tr>"
             let currentSession = currentHospital.sessions[j]
+            detailsHtml += currentHospital.fee_type == "Paid" ? ("<td><span class='red'>" + (currentHospital.vaccine_fees ? "₹" + currentHospital.vaccine_fees.find(x => x.vaccine === currentSession.vaccine).fee + "</span>" : "Paid</span></td>") + "</td>") : "<td>Free</td>";
             detailsHtml += "<td class='cellMinWidth'>" + currentSession.date + "</td>"
             detailsHtml += "<td class='cellMinWidth'>" + currentSession.vaccine + "</td>"
             detailsHtml += "<td>" + currentSession.min_age_limit + "+</td>"
@@ -303,7 +304,7 @@ function main(data, renderFilter)
     }
 
     clearFiltersButton.style.display = (filterInclusions.fee.length === 0 && filterInclusions.dates.length === 0 && filterInclusions.vaccines.length === 0 && filterInclusions.ageGroups.length === 0 && filterInclusions.slots.length === 2) ? 'none' : 'inline'
-    
+
     buildPreviousSessionCountMap()
     previousDetailsHtml = detailsHtml
 }
