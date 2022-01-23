@@ -12,7 +12,7 @@ Checkout a live version of CoWatch [here](https://divinsmathew.github.io/cowatch
 
 # The Co-WIN API 
 
-CoWatch makes use of the Indian Government's [Co-WIN API](https://apisetu.gov.in/public/api/cowin), to fetch vaccination slot data. These APIs are publicly available for use by third party applications. However, they do limit the number of API calls to 100 per 5 minutes per IP. Consider this if you're planning to build something awesome on top of this project.
+CoWatch makes use of the Indian Government's [Co-WIN API](https://apisetu.gov.in/api/cowin), to fetch vaccination slot data. These APIs are publicly available for use by third party applications. However, they do limit the number of API calls to 100 per 5 minutes per IP. Consider this if you're planning to build something awesome on top of this project.
 
 # Setup
 
